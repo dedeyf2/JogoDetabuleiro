@@ -17,6 +17,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         ArrayList<Player> playerList = Game.getPlayers();
         playerList = definePlayerOrder(playerList, input);
+        debugMode = debugMode(debugMode,input);
         
     
         boolean winCondition = false;
@@ -54,6 +55,7 @@ public class Main {
             System.out.println("Insira um valor para o jogador " + player.getColor() + " mover");
             diceResult = input.nextInt();
             input.nextLine(); 
+            player.movePosition(diceResult);
            
         }else{
             player.rollDice();
@@ -89,7 +91,35 @@ public class Main {
         for (Player player : orderedPlayers) {
             System.out.println(player.getColor().name());
         }
-
+       
+    
         return orderedPlayers;
     }
+    
+    public static boolean debugMode(boolean debugMode,Scanner input) {
+    	System.out.println("vai ser no modo debug ou não? y/n?");
+        char resposta;
+        do {
+            System.out.print("Digite 'y' para sim ou 'n' para não: ");
+            String entrada = input.next().trim().toLowerCase();
+
+            if (entrada.length() == 1) {
+                resposta = entrada.charAt(0);
+                if (resposta == 'y' || resposta == 'n') {
+                    break;
+                }
+            }
+            
+            System.out.println("Entrada inválida. Tente novamente.");
+        } while (true);
+
+        if (resposta == 'y') {
+            System.out.println("Você escolheu modo debug.");
+            debugMode = true;
+        } else {
+            System.out.println("Você escolheu normal.");
+            debugMode = false;
+        }
+        return debugMode;
     }
+}
