@@ -7,7 +7,7 @@ import java.util.Random;
 
 public abstract class Player {
     protected Color color;
-    protected int position;
+    protected int position = 0;
     protected int timesPlayed;
 
     public Player(Color color){
@@ -47,10 +47,13 @@ public abstract class Player {
         System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + position);
 
         // Verifica se os valores são duplicados
-        if (diceArray[0] == diceArray[1]) {
+        while (diceArray[0] == diceArray[1]) {
             System.out.println("Jogador da cor " + getColor() + " tirou valores duplicados e jogará novamente!");
-            int[] extraRoll = rollDice(); // Rola os dados novamente
-            System.out.println("Jogador da cor " + getColor() + " avançou mais " + (extraRoll[0] + extraRoll[1]) + " casas!");
+            diceArray = new int[]{random.nextInt(6) + 1, random.nextInt(6) + 1};
+            System.out.println("Jogador da cor " + getColor() + " girou " + diceArray[0] + " e " + diceArray[1] + " nos dados");
+            sumDice = diceArray[0] + diceArray[1];
+            movePosition(sumDice);
+            System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + position);
         }
 
         timesPlayed++;

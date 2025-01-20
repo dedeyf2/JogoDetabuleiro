@@ -46,11 +46,13 @@ public class TileChange extends Tile{
 		int carta = 1;
 		if (scanner.hasNextInt()){
 			carta = scanner.nextInt();
+			 scanner.nextLine();
 		}
 		
 		 while (carta < 1 || carta > 3) {
 	            System.out.println("Escolha inválida! Por favor, escolha um número entre 1 e 3.");
 	            carta = scanner.nextInt();
+	            scanner.nextLine();
 	        }
 		 switch(carta) {
 		 case 1:
@@ -68,7 +70,7 @@ public class TileChange extends Tile{
 		
 	
 		Game.generateRandomLucky(player.getColor());
-		scanner.close();
+	
 		}
 	
 	}

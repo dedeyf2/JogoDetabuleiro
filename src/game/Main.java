@@ -1,9 +1,6 @@
 package game;
 
 import tile.Board;
-
-
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,28 +14,31 @@ public class Main {
         game.setupPlayers();
         Game.listPlayers(false);
         String continueConfirmation;
-
-        ArrayList<Player> playerList = Game.getPlayers();
-        int i;
-        boolean winCondition = false;
         Scanner input = new Scanner(System.in);
+        ArrayList<Player> playerList = Game.getPlayers();
+        playerList = definePlayerOrder(playerList, input);
+        
+    
+        boolean winCondition = false;
+       
         while (!winCondition) {
-            for(i = 0; i < playerList.size(); i++){
-                Player currentPlayer = playerList.get(i);
+            for (Player currentPlayer : playerList) {
                 executeTurn(currentPlayer, debugMode, input);
                 board.stepOnTile(currentPlayer);
-                if(currentPlayer.getPosition() >= 40) {
-                	winCondition = true;
-                	System.out.println("jogador " + currentPlayer.getColor() + "ganhou!");
-                	break;
+                if (currentPlayer.getPosition() >= 40) {
+                    winCondition = true;
+                    System.out.println("Jogador " + currentPlayer.getColor() + " ganhou!");
+                    break;
                 }
             }
             Game.listPlayers(true);
-            //adicione uma pausa
+            System.out.println("Pressione Enter para continuar...");
+            input.nextLine();
         }
-        input.close();
+        
     }
 
+    
     public static void executeTurn(Player player, boolean debugMode, Scanner input){
     	int diceResult = 0;
         if (debugMode) {//no modo DEBUG você manualmente insere o valor a se mover
@@ -52,5 +52,36 @@ public class Main {
     }
         
 }
-   
+    public static ArrayList<Player> definePlayerOrder(ArrayList<Player> playerList, Scanner input) {
+        ArrayList<Player> orderedPlayers = new ArrayList<>();
+
+        System.out.println("Escolha a ordem dos jogadores digitando as cores na sequência desejada:");
+
+        for (int i = 0; i < playerList.size(); i++) {
+            System.out.print("Digite a cor do jogador " + (i + 1) + ": ");
+            String colorInput = input.nextLine().trim().toUpperCase();
+            Player selectedPlayer = null;
+
+            for (Player player : playerList) {
+                if (player.getColor().name().equals(colorInput)) {
+                    selectedPlayer = player;
+                    break;
+                }
+            }
+
+            if (selectedPlayer != null && !orderedPlayers.contains(selectedPlayer)) {
+                orderedPlayers.add(selectedPlayer);
+            } else {
+                System.out.println("Cor inválida ou já selecionada, tente novamente.");
+                i--; // Repetir a entrada para o mesmo jogador
+            }
+        }
+
+        System.out.println("Ordem dos jogadores definida:");
+        for (Player player : orderedPlayers) {
+            System.out.println(player.getColor().name());
+        }
+
+        return orderedPlayers;
+    }
     }

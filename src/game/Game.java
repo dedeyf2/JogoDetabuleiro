@@ -47,7 +47,7 @@ public class Game {
             	System.out.println("Cor inválida! Tente novamente com uma cor válida.");
             }
             }
-        scanner.close();
+       
         }
 	
 	private Player generatePlayerDiversity(Color playerColor, Random random) {
@@ -92,7 +92,7 @@ public class Game {
     			       
     			    }
     			}
-                
+                break;
             case 1:
             	for(Player p : getPlayers()) {
             		if (p.getColor() == playerColor) {
@@ -103,6 +103,7 @@ public class Game {
     			       
     			    }
     			}
+            	 break;
             case 2:
             	for(Player p : getPlayers()) {
             		if (p.getColor() == playerColor) {
@@ -130,10 +131,7 @@ public class Game {
            }
        return null;
     			}
-        
-    
-
-	
+       
 	 private boolean validateMinimumRequirements() {
 	        if (playerList.size() < 2) {
 	            return false; // Menos de 2 jogadores
@@ -146,14 +144,15 @@ public class Game {
 	        return playerTypes.size() >= 2; // Pelo menos 2 tipos diferentes
 	    }
 
-	
     public static void listPlayers(boolean listPosition){
-        for(int i = 0; i < playerList.size(); i++){
-            System.out.print("Jogador " + playerList.get(i).getColor());
-            if (listPosition) {
-                System.out.println(" Na posição " + playerList.get(i).getPosition() + "\n");
-            }else{
-                System.out.println("\n");
+        System.out.println("\nPosições atuais:");
+    	for(int i = 0; i < playerList.size(); i++){
+            System.out.print("\nJogador " + playerList.get(i).getColor());
+           
+                System.out.println(" Na posição " + playerList.get(i).getPosition());
+                if(i == playerList.size()-1 ) {
+                	System.out.print("\n");
+                
             }
         }
     }
