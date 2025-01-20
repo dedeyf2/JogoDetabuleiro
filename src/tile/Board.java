@@ -36,8 +36,11 @@ public class Board {
     public void stepOnTile(Player player) {
         int playerPosition = player.getPosition();
         if (playerPosition < 0 || playerPosition > 40) {
-            System.out.println("Posição inválida no tabuleiro!");
+            
             return;
+        }
+        if (playerPosition > 40) {
+            player.setPosition(40); 
         }
         System.out.println("jogador " + player.getColor() + " pisou na posição " + (playerPosition ));
         Tile tile = tileList.get(playerPosition);

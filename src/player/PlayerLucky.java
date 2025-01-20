@@ -9,31 +9,38 @@ public class PlayerLucky extends Player {
 		super(color);
 	}
 	@Override
-	 public int[] rollDice() {
-        Random random = new Random();
-        int[] diceArray;
+	public int[] rollDice() {
+	    if (getPosition() >= 40) {
+	        System.out.println("Jogador da cor " + getColor() + " já chegou à posição 40 e não precisa jogar novamente.");
+	        return new int[] {0, 0}; 
+	    }
 
-        do {
-            diceArray = new int[]{random.nextInt(6) + 1, random.nextInt(6) + 1};
-        } while (diceArray[0] + diceArray[1] < 6); // Garante soma > 6
+	    Random random = new Random();
+	    int[] diceArray;
 
-        System.out.println("Jogador da cor " + getColor() + " girou " + diceArray[0] + " e " + diceArray[1] + " nos dados");
-        int sumDice = diceArray[0] + diceArray[1];
-        movePosition(sumDice);
-        System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + position);
-        
-        // Verifica se os valores são duplicados
-        while (diceArray[0] == diceArray[1]) {
-            System.out.println("Jogador da cor " + getColor() + " tirou valores duplicados e jogará novamente!");
-            do {
-                diceArray = new int[]{random.nextInt(6) + 1, random.nextInt(6) + 1};
-            } while (diceArray[0] + diceArray[1] < 6); // Garante soma > 6
-            System.out.println("Jogador da cor " + getColor() + " girou " + diceArray[0] + " e " + diceArray[1] + " nos dados");
-            sumDice = diceArray[0] + diceArray[1];
-            movePosition(sumDice);
-            System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + position);
-        }
-        timesPlayed++;
-    return diceArray;
+	   
+	    do {
+	        diceArray = new int[]{random.nextInt(6) + 1, random.nextInt(6) + 1};
+	    } while (diceArray[0] + diceArray[1] <= 6); 
+
+	    System.out.println("Jogador da cor " + getColor() + " girou " + diceArray[0] + " e " + diceArray[1] + " nos dados");
+	    int sumDice = diceArray[0] + diceArray[1];
+	    movePosition(sumDice);
+	    System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + getPosition());
+
+	   
+	    while (diceArray[0] == diceArray[1]) {
+	        System.out.println("Jogador da cor " + getColor() + " tirou valores duplicados e jogará novamente!");
+	        do {
+	            diceArray = new int[]{random.nextInt(6) + 1, random.nextInt(6) + 1};
+	        } while (diceArray[0] + diceArray[1] <= 6); 
+	        System.out.println("Jogador da cor " + getColor() + " girou " + diceArray[0] + " e " + diceArray[1] + " nos dados");
+	        sumDice = diceArray[0] + diceArray[1];
+	        movePosition(sumDice);
+	        System.out.println("Jogador da cor " + getColor() + " avançou " + sumDice + " casas e está na posição " + getPosition());
+	    }
+
+	    timesPlayed++;
+	    return diceArray;
 	}
 }

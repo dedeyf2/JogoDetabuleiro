@@ -31,9 +31,11 @@ public class Main {
                     break;
                 }
             }
-            Game.listPlayers(true);
-            System.out.println("Pressione Enter para continuar...");
-            input.nextLine();
+            if (!winCondition) {
+                Game.listPlayers(true);
+                System.out.println("Pressione Enter para continuar...");
+                input.nextLine();
+            }
         }
         
     }

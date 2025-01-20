@@ -70,7 +70,8 @@ public class TileChange extends Tile{
 		
 	
 		Game.generateRandomLucky(player.getColor());
-	
+		System.out.println("digite enter para continuar ...");
+		scanner.nextLine();
 		}
 	
 	}

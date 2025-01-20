@@ -29,11 +29,18 @@ public abstract class Player {
     }
 
     public void movePosition(int value) {
-        position = position + value;
+        position += value;
+        if (position > 40) {
+            position = 40; 
+        }
     }
 
     public int[] rollDice() {
-        Random random = new Random();
+    	if (getPosition() >= 40) {
+	        System.out.println("Jogador da cor " + getColor() + " já chegou à posição 40 e não precisa jogar novamente.");
+	        return new int[] {0, 0}; 
+	    }
+    	Random random = new Random();
         int[] diceArray = {random.nextInt(6) + 1, random.nextInt(6) + 1};
 
         // Exibe o resultado de cada dado
@@ -41,6 +48,7 @@ public abstract class Player {
 
         // Calcula a soma e movimenta
         int sumDice = diceArray[0] + diceArray[1];
+        
         movePosition(sumDice);
 
         // Exibe a movimentação

@@ -25,6 +25,8 @@ public class TileBeginning extends Tile {
 		} catch (IllegalArgumentException e) {
 			System.out.println("cor não existe!");
 		}
+		System.out.println("digite enter para continuar ...");
+		scanner.nextLine();
 	}
 
 }
