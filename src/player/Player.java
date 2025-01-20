@@ -9,10 +9,12 @@ public abstract class Player {
     protected Color color;
     protected int position = 0;
     protected int timesPlayed;
+    protected boolean stunned;
 
     public Player(Color color){
         this.color = color;
         position = 0;
+        stunned = false;
     }
 
     public Color getColor() {
@@ -30,6 +32,14 @@ public abstract class Player {
 
     public void movePosition(int value) {
         position = position + value;
+    }
+
+    public boolean getStunned(){
+        return stunned;
+    }
+
+    public void setStunned(boolean stunned){
+        this.stunned = stunned;
     }
 
     public int[] rollDice() {
