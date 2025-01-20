@@ -9,6 +9,7 @@ public abstract class Player {
     protected Color color;
     protected int position = 0;
     protected int timesPlayed;
+    protected boolean stunned;
 
     public Player(Color color){
         this.color = color;
@@ -33,6 +34,13 @@ public abstract class Player {
         if (position > 40) {
             position = 40; 
         }
+    }
+    public boolean getStunned(){
+        return stunned;
+    }
+
+    public void setStunned(boolean stunned){
+        this.stunned = stunned;
     }
 
     public int[] rollDice() {
