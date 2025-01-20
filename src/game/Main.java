@@ -42,6 +42,12 @@ public class Main {
 
     
     public static void executeTurn(Player player, boolean debugMode, Scanner input){
+    	if (player.getStunned()) {
+            System.out.println("Jogador " + player.getColor() + " está atordoado e não jogará nesta rodada.");
+            player.setStunned(true);
+            return;  
+        }
+    	
     	int diceResult = 0;
         if (debugMode) {//no modo DEBUG você manualmente insere o valor a se mover
            
@@ -75,7 +81,7 @@ public class Main {
                 orderedPlayers.add(selectedPlayer);
             } else {
                 System.out.println("Cor inválida ou já selecionada, tente novamente.");
-                i--; // Repetir a entrada para o mesmo jogador
+                i--; 
             }
         }
 

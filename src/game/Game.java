@@ -134,14 +134,14 @@ public class Game {
        
 	 private boolean validateMinimumRequirements() {
 	        if (playerList.size() < 2) {
-	            return false; // Menos de 2 jogadores
+	            return false; 
 	        }
 
 	        HashSet<Class<? extends Player>> playerTypes = new HashSet<>();
 	        for (Player player : playerList) {
 	            playerTypes.add(player.getClass());
 	        }
-	        return playerTypes.size() >= 2; // Pelo menos 2 tipos diferentes
+	        return playerTypes.size() >= 2; 
 	    }
 
     public static void listPlayers(boolean listPosition){
