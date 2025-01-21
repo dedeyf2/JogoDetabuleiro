@@ -69,10 +69,14 @@ public class Game {
 	private Player generateRandomPlayer(Color playerColor, Random random) {
         switch (random.nextInt(3)) {
             case 0:
+            	System.out.println("jogador " + playerColor + " é azarado\n");
                 return new PlayerUnlucky(playerColor);
             case 1:
+            	System.out.println("jogador " + playerColor + " é normal\n");
                 return new PlayerNormal(playerColor);
             case 2:
+            	System.out.println("jogador " + playerColor + " é sortudo\n");
+
                 return new PlayerLucky(playerColor);
             default:
                 return new PlayerNormal(playerColor);
@@ -160,5 +164,37 @@ public class Game {
     public static ArrayList<Player> getPlayers() {
         return playerList;
     }
-   
+    public static ArrayList<Player> definePlayerOrder(ArrayList<Player> playerList, Scanner input) {
+        ArrayList<Player> orderedPlayers = new ArrayList<>();
+
+        System.out.println("Escolha a ordem dos jogadores digitando as cores na sequência desejada:");
+
+        for (int i = 0; i < playerList.size(); i++) {
+            System.out.print("Digite a cor do jogador " + (i + 1) + ": ");
+            String colorInput = input.nextLine().trim().toUpperCase();
+            Player selectedPlayer = null;
+
+            for (Player player : playerList) {
+                if (player.getColor().name().equals(colorInput)) {
+                    selectedPlayer = player;
+                    break;
+                }
+            }
+
+            if (selectedPlayer != null && !orderedPlayers.contains(selectedPlayer)) {
+                orderedPlayers.add(selectedPlayer);
+            } else {
+                System.out.println("Cor inválida ou já selecionada, tente novamente.");
+                i--; 
+            }
+        }
+
+        System.out.println("Ordem dos jogadores definida:");
+        for (Player player : orderedPlayers) {
+            System.out.println(player.getColor().name());
+        }
+       
+    
+        return orderedPlayers;
+    }
 }
