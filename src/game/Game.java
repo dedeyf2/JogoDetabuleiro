@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 
+import board.Board;
 import player.Player;
 import player.PlayerLucky;
 import player.PlayerNormal;
@@ -15,7 +16,18 @@ public class Game {
 	protected static ArrayList<Player> playerList = new ArrayList<Player>();
 	Scanner scanner = new Scanner(System.in);
 	private static final int MAX_PLAYERS = 6;
-	
+	private Board board;
+	private boolean debugMode;
+	private int numCasas;
+	public Game(int numCasas) {
+		this.numCasas = numCasas;
+        
+		this.board = new Board(numCasas);
+	}
+	 public void configTabuleiro(int numCasas) {
+	        this.board = new Board(numCasas); // Ajuste para permitir diferentes tamanhos de tabuleiro
+	    }
+	 
 	public void setupPlayers(){
         String input = "Você não deveria estar vendo isso!";
         Random random = new Random();
@@ -49,7 +61,30 @@ public class Game {
             }
        
         }
-	
+	 public void printTabuleiro() {
+	       // board.printBoard();
+	    }
+	 public void start() {
+		 setupPlayers();
+		 definePlayerOrder(playerList, scanner);
+		 debugMode(debugMode, scanner);
+		 boolean winCondition = false;
+		 while (!winCondition) {
+	            for (Player currentPlayer : playerList) {
+	                TurnController.executeTurn(currentPlayer, debugMode, scanner);
+	                board.stepOnTile(currentPlayer,numCasas);
+	                if (currentPlayer.getPosition() >= numCasas) {
+	                    winCondition = true;
+	                    break;
+	                }
+	            }
+	            if (!winCondition) {
+	                Game.listPlayers(true);
+	                System.out.println("Pressione Enter para continuar...");
+	                scanner.nextLine();
+	            }
+	        }
+	 }
 	private Player generatePlayerDiversity(Color playerColor, Random random) {
         Player newPlayer;
         if (playerList.isEmpty()) {
@@ -197,4 +232,32 @@ public class Game {
     
         return orderedPlayers;
     }
+    
+    public static boolean debugMode(boolean debugMode,Scanner input) {
+    	System.out.println("vai ser no modo debug ou não? y/n?");
+        char resposta;
+        do {
+            System.out.print("Digite 'y' para sim ou 'n' para não: ");
+            String entrada = input.next().trim().toLowerCase();
+
+            if (entrada.length() == 1) {
+                resposta = entrada.charAt(0);
+                if (resposta == 'y' || resposta == 'n') {
+                    break;
+                }
+            }
+            
+            System.out.println("Entrada inválida. Tente novamente.");
+        } while (true);
+
+        if (resposta == 'y') {
+            System.out.println("Você escolheu modo debug.");
+            debugMode = true;
+        } else {
+            System.out.println("Você escolheu normal.");
+            debugMode = false;
+        }
+        return debugMode;
+    }
 }
+
