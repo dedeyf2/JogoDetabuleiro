@@ -1,6 +1,6 @@
 package game;
 
-import tile.Board;
+import board.Board;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,7 +28,6 @@ public class Main {
                 board.stepOnTile(currentPlayer);
                 if (currentPlayer.getPosition() >= 40) {
                     winCondition = true;
-                    System.out.println("Jogador " + currentPlayer.getColor() + " ganhou!");
                     break;
                 }
             }

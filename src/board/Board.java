@@ -1,8 +1,17 @@
-package tile;
+package board;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import player.Player;
+import tile.Tile;
+import tile.TileBasic;
+import tile.TileBeginning;
+import tile.TileChange;
+import tile.TileDontPlay;
+import tile.TileFinish;
+import tile.TileLucky;
+import tile.TileStart;
+import tile.TileSwitch;
 
 public class Board {
     ArrayList<Tile> tileList = new ArrayList<>();

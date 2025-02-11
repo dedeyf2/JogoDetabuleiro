@@ -3,6 +3,7 @@ package tile;
 
 import java.util.Scanner;
 
+import board.Board;
 import player.Player;
 import game.Game;
 import player.PlayerLucky;

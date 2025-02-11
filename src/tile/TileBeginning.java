@@ -2,6 +2,7 @@ package tile;
 
 import java.util.Scanner;
 
+import board.Board;
 import game.Game;
 import player.Player;
 import player.enums.Color;

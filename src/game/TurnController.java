@@ -6,9 +6,9 @@ import player.Player;
 
 public class TurnController extends Game{
 	   public static void executeTurn(Player player, boolean debugMode, Scanner input){
-	    	if (player.getStunned()) {
+	    	if (player.getImprisoned()) {
 	            System.out.println("Jogador " + player.getColor() + " está atordoado e não jogará nesta rodada.");
-	            player.setStunned(true);
+	            player.setImprisoned(true);
 	            return;  
 	        }
 	    	
@@ -21,7 +21,7 @@ public class TurnController extends Game{
 	            player.movePosition(diceResult);
 	           
 	        }else{
-	            player.rollDice();
+	            player.doTurn();
 	    }
 	        
 	}	
