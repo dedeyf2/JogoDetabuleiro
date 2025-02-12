@@ -1,60 +1,103 @@
 package board;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import player.NotEnoughCoinException;
 import player.Player;
 import tile.Tile;
 import tile.TileBasic;
-import tile.TileBeginning;
 import tile.TileChange;
 import tile.TileDontPlay;
 import tile.TileFinish;
+import tile.TileJogaDeNovo;
 import tile.TileLucky;
 import tile.TileStart;
 import tile.TileSwitch;
+import tile.TileTroca;
 
 public class Board {
     ArrayList<Tile> tileList = new ArrayList<>();
     int numCasas;
+    
     public Board(int numCasas) {
+    	this.numCasas = numCasas;
+        this.tileList = new ArrayList<>();
+        setupBoardBase();
+    }
+    private void setupBoardBase() {
         for (int i = 0; i < numCasas; i++) {
-            int tilePosition = i ; //para que possamos inserir tiles como a gente normalmente pensa neles, 
-            //começando no 1 e terminando no 40, mesmo que sejam do 0 ao 39 no código
-            if (tilePosition == 0) {
-                tileList.add(new TileStart());
-            }else if (tilePosition == 10 || tilePosition == 25 || tilePosition == 38) {
-                tileList.add(new TileDontPlay());
-            }else  if (tilePosition == 13) {
-            	tileList.add(new TileChange());
-            }else if( tilePosition == 5 ||tilePosition == 15 ||tilePosition == 30 ) {
-            	tileList.add(new TileLucky());
-            }else if( tilePosition == 17 ||tilePosition == 27) {
-            	tileList.add(new TileBeginning());
-            }else if(tilePosition == 20 ||tilePosition == 35) {
-            	tileList.add(new TileSwitch());
-            }else if(tilePosition == numCasas-1 ) {
-            	tileList.add(new TileFinish());
-            }else{
-                tileList.add(new TileBasic());
+            tileList.add(new TileBasic());
+        }
+
+        tileList.set(0, new TileStart());
+        tileList.set(numCasas - 1, new TileFinish());
+    }
+    public void initializeBoard() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Agora você vai configurar as casas especiais do tabuleiro.");
+        
+        configureTiles(scanner, "TileDontPlay", TileDontPlay.class);
+        configureTiles(scanner, "TileChange", TileChange.class);
+        configureTiles(scanner, "TileLucky", TileLucky.class);
+        configureTiles(scanner, "TileSwitch", TileSwitch.class);
+        configureTiles(scanner, "TileJogaDeNovo", TileJogaDeNovo.class);
+        configureTiles(scanner, "TileTroca", TileTroca.class);
+        
+       
+        printBoard(); // Exibe o tabuleiro após a configuração
+    }
+    
+    
+    
+    private void configureTiles(Scanner scanner, String tileName, Class<? extends Tile> tileClass) {
+        System.out.println("Digite as posições para " + tileName + " (separadas por espaço), ou pressione Enter para pular:");
+        String input = scanner.nextLine();
+        if (!input.trim().isEmpty()) {
+            String[] positions = input.split(" ");
+            for (String pos : positions) {
+                try {
+                    int position = Integer.parseInt(pos);
+                    if (position > 0 && position < numCasas - 1) {
+                        tileList.set(position, tileClass.getDeclaredConstructor().newInstance());
+                    } else {
+                        System.out.println("Posição inválida: " + position);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Erro ao configurar " + tileName + " na posição " + pos);
+                }
             }
         }
     }
+    
+    public void printBoard() {
+        System.out.println("\nEstado atual do tabuleiro:");
+        for (int i = 0; i < tileList.size(); i++) {
+            Tile tile = tileList.get(i);
+            String tileType = tile.getClass().getSimpleName();
+            System.out.println("Casa " + i + ": " + tileType);
+        }
+    }
+    
+    
     public ArrayList<Tile> getTiles(){
         return tileList;
     }
 
-    public void stepOnTile(Player player,int numCasas) {
+    public void stepOnTile(Player player,int numCasas) throws NotEnoughCoinException {
         int playerPosition = player.getPosition();
         if (playerPosition < 0 || playerPosition > numCasas) {
         	 
             return;
         }
-        if (playerPosition > numCasas) {
+        if (playerPosition >= numCasas) {
             player.setPosition(numCasas - 1); 
         }
+        
         System.out.println("jogador " + player.getColor() + " pisou na posição " + (playerPosition ));
         Tile tile = tileList.get(playerPosition);
 
         tile.onStep(player, this);
+        
     }
 }

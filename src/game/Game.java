@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import board.Board;
+import player.NotEnoughCoinException;
 import player.Player;
 import player.PlayerLucky;
 import player.PlayerNormal;
@@ -13,23 +14,35 @@ import player.enums.Color;
 
 public class Game {
 	
-	protected static ArrayList<Player> playerList = new ArrayList<Player>();
+	public static ArrayList<Player> playerList = new ArrayList<Player>();
 	Scanner scanner = new Scanner(System.in);
 	private static final int MAX_PLAYERS = 6;
 	private Board board;
 	private boolean debugMode;
-	private int numCasas;
+	private static int numCasas;
+	
+	
 	public Game(int numCasas) {
 		this.numCasas = numCasas;
-        
+        setNumCasas(numCasas);
 		this.board = new Board(numCasas);
+		board.initializeBoard();
 	}
-	 public void configTabuleiro(int numCasas) {
+	
+	 public static int getNumCasas() {
+		return numCasas;
+	}
+
+	public void setNumCasas(int numCasas) {
+		this.numCasas = numCasas;
+	}
+
+	public void configTabuleiro(int numCasas) {
 	        this.board = new Board(numCasas); // Ajuste para permitir diferentes tamanhos de tabuleiro
 	    }
 	 
 	public void setupPlayers(){
-        String input = "Você não deveria estar vendo isso!";
+        
         Random random = new Random();
         System.out.print("Digite a cor de cada jogador(RED, BLUE, GREEN, YELLOW, BLACK, WHITE) seguido pela tecla ENTER. \n");
        
@@ -39,8 +52,9 @@ public class Game {
                  System.out.println("Número máximo de jogadores alcançado.");
                  break;
         	 }
-        	 
-            input = scanner.nextLine();
+        	
+        	
+            String input = scanner.nextLine();
             if(input.isEmpty()){
                 if ( !validateMinimumRequirements()) {
                     System.out.println("O jogo precisa de pelo menos dois jogadores e dois tipos diferentes de jogadores. Adicione mais jogadores.");
@@ -64,16 +78,51 @@ public class Game {
 	 public void printTabuleiro() {
 	       // board.printBoard();
 	    }
-	 public void start() {
+	 public void setDebugMode(Scanner input) {
+	        System.out.println("Vai ser no modo debug ou não? (y/n)");
+
+	        char resposta;
+	        do {
+	            System.out.print("Digite 'y' para sim ou 'n' para não: ");
+	            String entrada = input.next().trim().toLowerCase();
+
+	            if (entrada.length() == 1) {
+	                resposta = entrada.charAt(0);
+	                if (resposta == 'y' || resposta == 'n') {
+	                    break;
+	                }
+	            }
+
+	            System.out.println("Entrada inválida. Tente novamente.");
+	        } while (true);
+
+	        if (resposta == 'y') {
+	            System.out.println("Você escolheu modo debug.");
+	            this.debugMode = true;
+	        } else {
+	            System.out.println("Você escolheu modo normal.");
+	            this.debugMode = false;
+	        }
+	    }
+
+	    public boolean isDebugMode() {
+	        return debugMode;
+	    }
+	
+	 public void start() throws NotEnoughCoinException {
 		 setupPlayers();
 		 definePlayerOrder(playerList, scanner);
-		 debugMode(debugMode, scanner);
+		 setDebugMode(scanner);
 		 boolean winCondition = false;
 		 while (!winCondition) {
 	            for (Player currentPlayer : playerList) {
 	                TurnController.executeTurn(currentPlayer, debugMode, scanner);
+	                if(!currentPlayer.getImprisoned()) {
+	                	currentPlayer.setTimesPlayed(1);
+	                }
+	                
 	                board.stepOnTile(currentPlayer,numCasas);
-	                if (currentPlayer.getPosition() >= numCasas) {
+	                if (currentPlayer.getPosition() >= numCasas -1 ) {
 	                    winCondition = true;
 	                    break;
 	                }
@@ -84,6 +133,7 @@ public class Game {
 	                scanner.nextLine();
 	            }
 	        }
+		 
 	 }
 	private Player generatePlayerDiversity(Color playerColor, Random random) {
         Player newPlayer;
@@ -183,23 +233,29 @@ public class Game {
 	        return playerTypes.size() >= 2; 
 	    }
 
-    public static void listPlayers(boolean listPosition){
-        System.out.println("\nPosições atuais:");
-    	for(int i = 0; i < playerList.size(); i++){
-            System.out.print("\nJogador " + playerList.get(i).getColor());
-           
-                System.out.println(" Na posição " + playerList.get(i).getPosition());
-                if(i == playerList.size()-1 ) {
-                	System.out.print("\n");
-                
-            }
-        }
-    }
+	 public static void listPlayers(boolean listPosition) {
+		    System.out.println("\nPosições atuais:");
+
+		    for (int i = 0; i < playerList.size(); i++) {
+		        Player player = playerList.get(i);
+		        System.out.print("\nJogador " + player.getColor());
+
+		        if (listPosition) {
+		            System.out.print(" está na posição " + player.getPosition());
+		        }
+
+		        System.out.println(" | Moedas: " + player.getCoin());
+
+		        if (i == playerList.size() - 1) {
+		            System.out.print("\n");
+		        }
+		    }
+		}
     
     public static ArrayList<Player> getPlayers() {
         return playerList;
     }
-    public static ArrayList<Player> definePlayerOrder(ArrayList<Player> playerList, Scanner input) {
+    public static void definePlayerOrder(ArrayList<Player> playerList, Scanner input) {
         ArrayList<Player> orderedPlayers = new ArrayList<>();
 
         System.out.println("Escolha a ordem dos jogadores digitando as cores na sequência desejada:");
@@ -220,17 +276,18 @@ public class Game {
                 orderedPlayers.add(selectedPlayer);
             } else {
                 System.out.println("Cor inválida ou já selecionada, tente novamente.");
-                i--; 
+                i--;
             }
         }
 
+        // Atualiza playerList com a nova ordem
+        playerList.clear();
+        playerList.addAll(orderedPlayers);
+
         System.out.println("Ordem dos jogadores definida:");
-        for (Player player : orderedPlayers) {
+        for (Player player : playerList) {
             System.out.println(player.getColor().name());
         }
-       
-    
-        return orderedPlayers;
     }
     
     public static boolean debugMode(boolean debugMode,Scanner input) {
